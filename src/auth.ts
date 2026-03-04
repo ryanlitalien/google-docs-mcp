@@ -44,10 +44,9 @@ function getTokenPath(): string {
 // ---------------------------------------------------------------------------
 
 const SCOPES = [
-  'https://www.googleapis.com/auth/documents',
-  'https://www.googleapis.com/auth/drive',
-  'https://www.googleapis.com/auth/spreadsheets',
-  'https://www.googleapis.com/auth/script.external_request',
+  'https://www.googleapis.com/auth/documents',       // Docs read/write
+  'https://www.googleapis.com/auth/drive.readonly',   // Drive search/list/read only
+  'https://www.googleapis.com/auth/spreadsheets',     // Sheets read/write
 ];
 
 // ---------------------------------------------------------------------------

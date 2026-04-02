@@ -13,7 +13,7 @@
 //   BASE_URL=https://...               Public URL for OAuth redirects
 //   ALLOWED_DOMAINS=scio.cz,...        Restrict to specific Google Workspace domains
 
-import { FastMCP, GoogleProvider } from 'fastmcp';
+import { FastMCP, type GoogleProvider } from 'fastmcp';
 import {
   buildCachedToolsListPayload,
   collectToolsWhileRegistering,
@@ -21,9 +21,9 @@ import {
 } from './cachedToolsList.js';
 import { initializeGoogleClient } from './clients.js';
 import { registerAllTools } from './tools/index.js';
-import { wrapServerForRemote } from './remoteWrapper.js';
-import { registerLandingPage } from './landingPage.js';
-import { FirestoreTokenStorage } from './firestoreTokenStorage.js';
+// remoteWrapper is lazily imported below only in httpStream mode
+// landingPage is lazily imported below only in httpStream mode
+// Firestore is lazily imported below only when TOKEN_STORE=firestore
 import { logger } from './logger.js';
 
 // --- Auth subcommand ---
@@ -61,42 +61,48 @@ if (isRemote) {
   }
 }
 
+// Build remote auth config lazily to avoid importing unavailable remote-only deps in stdio mode
+let remoteAuth: GoogleProvider | undefined;
+if (isRemote) {
+  const { GoogleProvider: GP } = await import('fastmcp');
+  remoteAuth = new GP({
+    allowedRedirectUriPatterns: ['http://localhost:*', `${process.env.BASE_URL}/*`, 'cursor://*'],
+    baseUrl: process.env.BASE_URL!,
+    clientId: process.env.GOOGLE_CLIENT_ID!,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    scopes: [
+      'openid',
+      'email',
+      'https://www.googleapis.com/auth/documents',
+      'https://www.googleapis.com/auth/spreadsheets',
+      'https://www.googleapis.com/auth/drive',
+      'https://www.googleapis.com/auth/script.external_request',
+    ],
+    ...(process.env.JWT_SIGNING_KEY && { jwtSigningKey: process.env.JWT_SIGNING_KEY }),
+    ...(process.env.REFRESH_TOKEN_TTL && {
+      refreshTokenTtl: parseInt(process.env.REFRESH_TOKEN_TTL),
+    }),
+    ...(process.env.TOKEN_STORE === 'firestore' && {
+      tokenStorage: new (await import('./firestoreTokenStorage.js')).FirestoreTokenStorage(process.env.GCLOUD_PROJECT),
+    }),
+  });
+}
+
 const server = new FastMCP({
   name: 'Ultimate Google Docs & Sheets MCP Server',
   version: '1.0.0',
-  ...(isRemote && {
-    auth: new GoogleProvider({
-      allowedRedirectUriPatterns: ['http://localhost:*', `${process.env.BASE_URL}/*`, 'cursor://*'],
-      baseUrl: process.env.BASE_URL!,
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      scopes: [
-        'openid',
-        'email',
-        'https://www.googleapis.com/auth/documents',
-        'https://www.googleapis.com/auth/spreadsheets',
-        'https://www.googleapis.com/auth/drive',
-        'https://www.googleapis.com/auth/script.external_request',
-      ],
-      ...(process.env.JWT_SIGNING_KEY && { jwtSigningKey: process.env.JWT_SIGNING_KEY }),
-      ...(process.env.REFRESH_TOKEN_TTL && {
-        refreshTokenTtl: parseInt(process.env.REFRESH_TOKEN_TTL),
-      }),
-      ...(process.env.TOKEN_STORE === 'firestore' && {
-        tokenStorage: new FirestoreTokenStorage(process.env.GCLOUD_PROJECT),
-      }),
-    }),
-  }),
+  ...(isRemote && { auth: remoteAuth }),
 });
 
 const registeredTools: Parameters<FastMCP['addTool']>[0][] = [];
 collectToolsWhileRegistering(server, registeredTools);
-if (isRemote) wrapServerForRemote(server);
+if (isRemote) (await import('./remoteWrapper.js')).wrapServerForRemote(server);
 registerAllTools(server);
 
 try {
   if (isRemote) {
     logger.info('Starting in remote mode (httpStream + MCP OAuth 2.1)...');
+    const { registerLandingPage } = await import('./landingPage.js');
     registerLandingPage(server, registeredTools.length);
 
     const port = parseInt(process.env.PORT || '8080');

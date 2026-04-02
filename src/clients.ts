@@ -4,7 +4,7 @@ import { UserError } from 'fastmcp';
 import { OAuth2Client } from 'google-auth-library';
 import { authorize } from './auth.js';
 import { logger } from './logger.js';
-import { requestClients } from './remoteWrapper.js';
+import { requestClients } from './requestClients.js';
 
 const isRemote = process.env.MCP_TRANSPORT === 'httpStream';
 

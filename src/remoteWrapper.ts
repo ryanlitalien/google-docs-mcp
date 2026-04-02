@@ -1,24 +1,16 @@
-import { AsyncLocalStorage } from 'node:async_hooks';
 import { createHash } from 'node:crypto';
 import { getAuthSession, requireAuth, UserError } from 'fastmcp';
 import type { FastMCP } from 'fastmcp';
 import { google, docs_v1, drive_v3, sheets_v4, script_v1 } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 import { logger } from './logger.js';
+import { requestClients, type RequestClients } from './requestClients.js';
+export type { RequestClients };
+export { requestClients };
 
 function hashToken(token: string): string {
   return createHash('sha256').update(token).digest('hex');
 }
-
-export interface RequestClients {
-  auth: OAuth2Client;
-  docs: docs_v1.Docs;
-  sheets: sheets_v4.Sheets;
-  drive: drive_v3.Drive;
-  script: script_v1.Script;
-}
-
-export const requestClients = new AsyncLocalStorage<RequestClients>();
 
 const allowedDomains = (process.env.ALLOWED_DOMAINS || '').split(',').filter(Boolean);
 const domainCache = new Map<string, boolean>();

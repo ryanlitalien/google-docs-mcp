@@ -4,13 +4,12 @@ import { registerDocsTools } from './docs/index.js';
 import { registerDriveTools } from './drive/index.js';
 import { registerSheetsTools } from './sheets/index.js';
 import { registerUtilsTools } from './utils/index.js';
+import { registerTasksTools } from './tasks/index.js';
 
-/**
- * Registers all 44 tools with the FastMCP server.
- */
 export function registerAllTools(server: FastMCP) {
   registerDocsTools(server);
   registerDriveTools(server);
   registerSheetsTools(server);
   registerUtilsTools(server);
+  registerTasksTools(server);
 }

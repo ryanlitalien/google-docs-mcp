@@ -53,6 +53,7 @@ const SCOPES = [
   'https://www.googleapis.com/auth/documents',       // Docs read/write
   'https://www.googleapis.com/auth/drive.readonly',   // Drive search/list/read only
   'https://www.googleapis.com/auth/spreadsheets',     // Sheets read/write
+  'https://www.googleapis.com/auth/tasks',            // Google Tasks read/write
 ];
 
 // ---------------------------------------------------------------------------

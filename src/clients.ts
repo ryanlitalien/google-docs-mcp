@@ -18,7 +18,7 @@ let googleTasks: tasks_v1.Tasks | null = null;
 // --- Initialization ---
 export async function initializeGoogleClient() {
   if (googleDocs && googleDrive && googleSheets)
-    return { authClient, googleDocs, googleDrive, googleSheets, googleScript };
+    return { authClient, googleDocs, googleDrive, googleSheets, googleScript, googleTasks };
   if (!authClient) {
     try {
       logger.info('Attempting to authorize Google API client...');

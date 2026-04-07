@@ -12,7 +12,13 @@ Connect Claude Desktop, Cursor, or any MCP client to your Google Docs, Google Sh
 
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
 2. Create or select a project
-3. Enable the **Google Docs API**, **Google Sheets API**, **Google Drive API**, and **Google Tasks API**
+3. Enable the following APIs:
+   - [Google Docs API](https://console.cloud.google.com/apis/api/docs.googleapis.com/metrics)
+   - [Google Sheets API](https://console.cloud.google.com/apis/api/sheets.googleapis.com/metrics)
+   - [Google Drive API](https://console.cloud.google.com/apis/api/drive.googleapis.com/metrics)
+   - [Google Tasks API](https://console.cloud.google.com/apis/api/tasks.googleapis.com/metrics)
+   - [Google Calendar API](https://console.cloud.google.com/apis/api/calendar-json.googleapis.com/metrics)
+   - [Gmail API](https://console.cloud.google.com/apis/api/gmail.googleapis.com/metrics)
 4. Configure the **OAuth consent screen** (External, add your email as a test user)
 5. Create an **OAuth client ID** (Desktop app type)
 6. Copy the **Client ID** and **Client Secret** from the confirmation screen
@@ -389,7 +395,7 @@ Without `GOOGLE_MCP_PROFILE`, behavior is unchanged.
   - Verify `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set in the `env` block of your MCP config.
   - Try running manually: `npx @a-bonus/google-docs-mcp` and check stderr for errors.
 - **Authorization errors:**
-  - Ensure Docs, Sheets, Drive, and Tasks APIs are enabled in Google Cloud Console.
+  - Ensure Docs, Sheets, Drive, Tasks, Calendar, and Gmail APIs are enabled in Google Cloud Console.
   - Confirm your email is listed as a Test User on the OAuth consent screen.
   - Re-authorize: `npx @a-bonus/google-docs-mcp auth`
   - Delete `~/.config/google-docs-mcp/token.json` and re-authorize if upgrading.
@@ -411,13 +417,13 @@ Without `GOOGLE_MCP_PROFILE`, behavior is unchanged.
 2. **Create or Select a Project:** Click the project dropdown > "NEW PROJECT". Name it (e.g., "MCP Docs Server") and click "CREATE".
 3. **Enable APIs:**
    - Navigate to "APIs & Services" > "Library"
-   - Search for and enable: **Google Docs API**, **Google Sheets API**, **Google Drive API**, **Google Tasks API**
+   - Enable each: [Docs](https://console.cloud.google.com/apis/api/docs.googleapis.com/metrics), [Sheets](https://console.cloud.google.com/apis/api/sheets.googleapis.com/metrics), [Drive](https://console.cloud.google.com/apis/api/drive.googleapis.com/metrics), [Tasks](https://console.cloud.google.com/apis/api/tasks.googleapis.com/metrics), [Calendar](https://console.cloud.google.com/apis/api/calendar-json.googleapis.com/metrics), [Gmail](https://console.cloud.google.com/apis/api/gmail.googleapis.com/metrics)
 4. **Configure OAuth Consent Screen:**
    - Go to "APIs & Services" > "OAuth consent screen"
    - Choose "External" and click "CREATE"
    - Fill in: App name, User support email, Developer contact email
    - Click "SAVE AND CONTINUE"
-   - Add scopes: `documents`, `spreadsheets`, `drive`, `tasks`
+   - Add scopes: `documents`, `spreadsheets`, `drive`, `tasks`, `calendar`, `gmail.modify`
    - Click "SAVE AND CONTINUE"
    - Add your Google email as a Test User
    - Click "SAVE AND CONTINUE"

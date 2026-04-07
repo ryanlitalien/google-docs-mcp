@@ -20,7 +20,7 @@ let googleGmail: gmail_v1.Gmail | null = null;
 // --- Initialization ---
 export async function initializeGoogleClient() {
   if (googleDocs && googleDrive && googleSheets)
-    return { authClient, googleDocs, googleDrive, googleSheets, googleScript, googleTasks };
+    return { authClient, googleDocs, googleDrive, googleSheets, googleScript, googleTasks, googleCalendar, googleGmail };
   if (!authClient) {
     try {
       logger.info('Attempting to authorize Google API client...');

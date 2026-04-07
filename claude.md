@@ -1,6 +1,6 @@
 # Google Docs MCP Server
 
-FastMCP server with 50 tools for Google Docs, Sheets, and Drive.
+FastMCP server with 67 tools for Google Docs, Sheets, Drive, Tasks, Calendar, and Gmail.
 
 ## Tool Categories
 
@@ -14,6 +14,9 @@ FastMCP server with 50 tools for Google Docs, Sheets, and Drive.
 | Sheets        | 8     | `readSpreadsheet`, `writeSpreadsheet`, `appendSpreadsheetRows`, `clearSpreadsheetRange`, `createSpreadsheet`, `listGoogleSheets`    |
 | Sheets Tables | 6     | `createTable`, `listTables`, `getTable`, `deleteTable`, `updateTableRange`, `appendTableRows`                                       |
 | Drive         | 13    | `listGoogleDocs`, `searchGoogleDocs`, `getDocumentInfo`, `createFolder`, `moveFile`, `copyFile`, `createDocument`                   |
+| Tasks         | 5     | `listTaskLists`, `listTasks`, `createTask`, `updateTask`, `deleteTask`                                                              |
+| Calendar      | 7     | `listCalendars`, `listEvents`, `getEvent`, `createEvent`, `updateEvent`, `deleteEvent`, `checkAvailability`                         |
+| Gmail         | 5     | `listMessages`, `getMessage`, `sendMessage`, `listLabels`, `modifyLabels`                                                           |
 
 \*Not fully implemented
 

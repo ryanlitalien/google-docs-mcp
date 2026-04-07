@@ -5,6 +5,8 @@ import { registerDriveTools } from './drive/index.js';
 import { registerSheetsTools } from './sheets/index.js';
 import { registerUtilsTools } from './utils/index.js';
 import { registerTasksTools } from './tasks/index.js';
+import { registerCalendarTools } from './calendar/index.js';
+import { registerGmailTools } from './gmail/index.js';
 
 export function registerAllTools(server: FastMCP) {
   registerDocsTools(server);
@@ -12,4 +14,6 @@ export function registerAllTools(server: FastMCP) {
   registerSheetsTools(server);
   registerUtilsTools(server);
   registerTasksTools(server);
+  registerCalendarTools(server);
+  registerGmailTools(server);
 }
